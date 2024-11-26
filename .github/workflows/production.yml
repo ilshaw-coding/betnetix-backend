@@ -23,3 +23,16 @@ jobs:
     steps:
       - name: build
         run: docker build ./ -f dockerfile -t backend:production
+  restart:
+    needs: build
+    runs-on:
+      labels:
+        - self-hosted
+        - backend
+    steps:
+      - name: stop
+        run: docker compose -p development stop
+      - name: build
+        run: docker compose -p development -f /var/lib/docker/volumes/portainer/_data/compose/6/docker-compose.yml --env-file /var/lib/docker/volumes/portainer/_data/compose/6/stack.env build
+      - name: start
+        run: docker compose -p development start
