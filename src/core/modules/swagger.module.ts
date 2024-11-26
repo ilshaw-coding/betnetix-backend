@@ -8,7 +8,7 @@ export class SwaggerModule {
     public use(app: NestFastifyApplication) {
         const builder = new DocumentBuilder();
 
-        const documentation = builder.setTitle("Betnetix backend server").setDescription("Betnetix backend server implementation").build();
+        const documentation = builder.setTitle("Betnetix backend").setDescription("Betnetix backend implementation").build();
 
         const document = NestSwaggerModule.createDocument(app, documentation);
 
