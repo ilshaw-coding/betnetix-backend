@@ -14,6 +14,10 @@ COPY ./tsconfig.json ./tsconfig.json
 
 RUN npm run build
 
+COPY ./prisma ./prisma
+
+RUN npm run generate
+
 FROM node:22.10.0 AS image
 
 WORKDIR /app
