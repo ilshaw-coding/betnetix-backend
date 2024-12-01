@@ -1,13 +1,13 @@
-import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from "@nestjs/common";
+import { Injectable, ExecutionContext, CallHandler } from "@nestjs/common";
 
 import * as rxjs from "rxjs";
 
 import { HttpBaseResponseClass } from "@common/classes/http-base-response.class";
 
 @Injectable()
-export class HttpResponseInterceptor implements NestInterceptor {
-    public intercept(context: ExecutionContext, next: CallHandler) {
-        const operator = rxjs.map((value) => {
+export class HttpResponseInterceptor {
+    public intercept(executionContext: ExecutionContext, callHandler: CallHandler) {
+        const operatorFunction = rxjs.map((value) => {
             if(value instanceof HttpBaseResponseClass) {
                 return value.getResponse();
             }
@@ -16,8 +16,8 @@ export class HttpResponseInterceptor implements NestInterceptor {
             }
         });
 
-        const observable = next.handle();
+        const observable = callHandler.handle();
 
-        return observable.pipe(operator);
+        return observable.pipe(operatorFunction);
     }
 }
