@@ -1,0 +1,74 @@
+datasource Database {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+generator Client {
+    provider = "prisma-client-js"
+}
+
+enum From {
+    client @map("client")
+    server @map("server")
+}
+
+model User {
+    internal_id String   @map("internal_id") @default(uuid())
+    external_id String?  @map("external_id")
+
+    chats       Chat[]                                        @relation("user_to_chat")
+    access      Access?
+    messages    Message[]
+
+    created_at  DateTime @map("created_at")  @default(now())
+    updated_at  DateTime @map("updated_at")  @default(now())  @updatedAt
+
+    @@map("user")
+    @@id([internal_id])
+    @@unique([external_id])
+}
+
+model Access {
+    token       String   @map("token")
+    user_id     String   @map("user_id")
+    internal_id String   @map("internal_id") @default(uuid())
+
+    user        User                                          @relation(fields: [user_id], references: [internal_id])
+
+    created_at  DateTime @map("created_at")  @default(now())
+    updated_at  DateTime @map("updated_at")  @default(now())  @updatedAt
+
+    @@map("access")
+    @@id([internal_id])
+    @@unique([user_id])
+}
+
+model Chat {
+    internal_id String   @map("internal_id") @default(uuid())
+
+    users       User[]                                        @relation("user_to_chat")
+    messages    Message[]
+
+    created_at  DateTime @map("created_at")  @default(now())
+    updated_at  DateTime @map("updated_at")  @default(now())  @updatedAt
+
+    @@map("chat")
+    @@id([internal_id])
+}
+
+model Message {
+    text        String   @map("text")
+    from        From     @map("from")
+    chat_id     String   @map("chat_id")
+    user_id     String?  @map("user_id")
+    internal_id String   @map("internal_id") @default(uuid())
+
+    chat        Chat                                          @relation(fields: [chat_id], references: [internal_id])
+    user        User?                                         @relation(fields: [user_id], references: [internal_id])
+
+    created_at  DateTime @map("created_at")  @default(now())
+    updated_at  DateTime @map("updated_at")  @default(now())  @updatedAt
+
+    @@map("message")
+    @@id([internal_id])
+}
