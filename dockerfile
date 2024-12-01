@@ -8,15 +8,15 @@ COPY ./package.json ./package.json
 
 RUN npm install
 
+COPY ./prisma ./prisma
+
+RUN npm run generate
+
 COPY ./src ./src
 
 COPY ./tsconfig.json ./tsconfig.json
 
 RUN npm run build
-
-COPY ./prisma ./prisma
-
-RUN npm run generate
 
 FROM node:22.10.0 AS image
 
