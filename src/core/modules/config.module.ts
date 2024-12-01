@@ -11,7 +11,8 @@ import { ConfigService } from "@core/services/config.service";
     	NestConfigModule.forRoot({
             validationSchema: joi.object({
                 APP_HOSTNAME: joi.string().required(),
-                APP_PORT: joi.number().required()
+                APP_PORT: joi.number().required(),
+                JWT_SECRET: joi.string().required()
             })
         })
     ],
