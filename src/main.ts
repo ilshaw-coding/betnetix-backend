@@ -1,26 +1,30 @@
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
 import { NestFactory } from "@nestjs/core";
 
+import * as fastifyCookie from "@fastify/cookie";
+
 import { ConfigService } from "@core/services/config.service";
 import { SwaggerModule } from "@core/modules/swagger.module";
 import { AppModule } from "@core/modules/app.module";
 
-async function bootstrap() {
-    const adapter = new FastifyAdapter();
+async function applicationBootstrap() {
+    const fastifyAdapter = new FastifyAdapter();
 
-    const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter);
+    const nestFastifyApplication = await NestFactory.create<NestFastifyApplication>(AppModule, fastifyAdapter);
 
-    const swagger = app.get(SwaggerModule);
+    nestFastifyApplication.register(fastifyCookie);
 
-    swagger.use(app);
+    const swaggerModule = nestFastifyApplication.get(SwaggerModule);
 
-    const config = app.get(ConfigService);
+    swaggerModule.useNestFastifyApplication(nestFastifyApplication);
 
-    const hostname = config.getAppHostname();
+    const configService = nestFastifyApplication.get(ConfigService);
 
-    const port = config.getAppPort();
+    const appHostname = configService.getAppHostname();
 
-    await app.listen(port, hostname);
+    const appPort = configService.getAppPort();
+
+    return await nestFastifyApplication.listen(appPort, appHostname);
 }
 
-bootstrap();
+applicationBootstrap();
