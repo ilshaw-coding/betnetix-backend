@@ -32,12 +32,3 @@ jobs:
     steps:
       - name: restart
         run: docker compose -p development -f /var/lib/docker/volumes/portainer/_data/compose/1/docker-compose.yml --env-file /var/lib/docker/volumes/portainer/_data/compose/1/stack.env up -d --build
-  migrate:
-    needs: restart
-    runs-on:
-      labels:
-        - self-hosted
-        - backend
-    steps:
-      - name: migrate
-        run: docker compose -p development -f /var/lib/docker/volumes/portainer/_data/compose/1/docker-compose.yml --env-file /var/lib/docker/volumes/portainer/_data/compose/1/stack.env exec npm run migrate:production
