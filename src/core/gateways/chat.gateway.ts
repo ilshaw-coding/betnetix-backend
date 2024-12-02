@@ -1,5 +1,5 @@
-import { WebSocketGateway, WebSocketServer, SubscribeMessage, WsResponse } from "@nestjs/websockets";
-import { UseFilters, UseGuards } from "@nestjs/common";
+import { WebSocketGateway, WebSocketServer, SubscribeMessage } from "@nestjs/websockets";
+import { UseFilters, UseGuards, Logger } from "@nestjs/common";
 
 import { Server, Socket } from "socket.io";
 
@@ -19,6 +19,8 @@ import { JwtService } from "@core/services/jwt.service";
 @UseFilters(WsExceptionFilter)
 export class ChatGateway {
     @WebSocketServer() public readonly server: Server;
+
+    private readonly logger = new Logger("ChatGateway");
 
     constructor(
         private readonly exceptionService: ExceptionService,
@@ -73,13 +75,15 @@ export class ChatGateway {
                 });
     
                 const timestamp = message.created_at.getTime();
-    
-                return room.emit("message", {
+
+                const response = {
                     message: message.text,
                     from: message.user.internal_id,
                     chat: message.chat.internal_id,
                     time: timestamp
-                });
+                };
+    
+                return (this.logger.log("Response:", response), room.emit("message", response));
             }
             else {
                 throw this.exceptionService.getWsBadRequestException({
@@ -135,12 +139,14 @@ export class ChatGateway {
     
                 const timestamp = message.created_at.getTime();
     
-                return room.emit("message", {
+                const response = {
                     message: message.text,
                     from: message.from,
                     chat: message.chat.internal_id,
                     time: timestamp
-                });
+                };
+    
+                return (this.logger.log("Response:", response), room.emit("message", response));
             }
             else {
                 throw this.exceptionService.getWsBadRequestException({
@@ -201,12 +207,14 @@ export class ChatGateway {
     
                 const timestamp = message.created_at.getTime();
     
-                return room.emit("message", {
+                const response = {
                     message: message.text,
                     from: message.from,
                     chat: message.chat.internal_id,
                     time: timestamp
-                });
+                };
+    
+                return (this.logger.log("Response:", response), room.emit("message", response));
             }
         }
         else {

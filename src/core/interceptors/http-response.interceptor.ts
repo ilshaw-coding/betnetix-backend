@@ -1,4 +1,4 @@
-import { Injectable, ExecutionContext, CallHandler } from "@nestjs/common";
+import { Injectable, ExecutionContext, CallHandler, Logger } from "@nestjs/common";
 
 import * as rxjs from "rxjs";
 
@@ -6,13 +6,15 @@ import { HttpBaseResponseClass } from "@common/classes/http-base-response.class"
 
 @Injectable()
 export class HttpResponseInterceptor {
+    private readonly logger = new Logger("HttpResponseInterceptor");
+
     public intercept(executionContext: ExecutionContext, callHandler: CallHandler) {
         const operatorFunction = rxjs.map((value) => {
             if(value instanceof HttpBaseResponseClass) {
-                return value.getResponse();
+                return (this.logger.log("Response:", value), value.getResponse());
             }
             else {
-                return value;
+                return (this.logger.log("Response:", value), value);
             }
         });
 

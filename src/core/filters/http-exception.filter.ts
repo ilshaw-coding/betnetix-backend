@@ -1,10 +1,10 @@
-import { Catch, ArgumentsHost, ExceptionFilter as NestExceptionFilter } from "@nestjs/common";
+import { Catch, ArgumentsHost, ExceptionFilter as NestExceptionFilter, Logger } from "@nestjs/common";
 
 import { HttpBaseExceptionClass } from "@common/classes/http-base-exception.class";
 
 @Catch(HttpBaseExceptionClass)
 export class HttpExceptionFilter implements NestExceptionFilter {
-    constructor() {}
+    private readonly logger = new Logger("HttpExceptionFilter");
 
     public catch(httpBaseExceptionClass: HttpBaseExceptionClass, argumentsHost: ArgumentsHost) {
         const exception = httpBaseExceptionClass.getException();
@@ -14,6 +14,6 @@ export class HttpExceptionFilter implements NestExceptionFilter {
 
         const response = httpArgumentsHost.getResponse();
 	
-        return response.status(status).send(exception);
+        return (this.logger.warn("Exception:", httpBaseExceptionClass), response.status(status).send(exception));
     }
 }
