@@ -83,7 +83,7 @@ export class ChatGateway {
                     time: timestamp
                 };
     
-                return (this.logger.log("Response:", response), room.emit("message", response));
+                return (this.logger.verbose("Response:", JSON.stringify(response)), room.emit("message", response));
             }
             else {
                 throw this.exceptionService.getWsBadRequestException({
@@ -146,7 +146,7 @@ export class ChatGateway {
                     time: timestamp
                 };
     
-                return (this.logger.log("Response:", response), room.emit("message", response));
+                return (this.logger.verbose("Response:", JSON.stringify(response)), room.emit("message", response));
             }
             else {
                 throw this.exceptionService.getWsBadRequestException({
@@ -214,7 +214,7 @@ export class ChatGateway {
                     time: timestamp
                 };
     
-                return (this.logger.log("Response:", response), room.emit("message", response));
+                return (this.logger.verbose("Response:", JSON.stringify(response)), room.emit("message", response));
             }
         }
         else {

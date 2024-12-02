@@ -14,6 +14,6 @@ export class HttpExceptionFilter implements NestExceptionFilter {
 
         const response = httpArgumentsHost.getResponse();
 	
-        return (this.logger.warn("Exception:", httpBaseExceptionClass), response.status(status).send(exception));
+        return (this.logger.warn("Exception:", JSON.stringify(httpBaseExceptionClass)), response.status(status).send(exception));
     }
 }

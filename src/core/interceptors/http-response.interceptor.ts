@@ -11,10 +11,10 @@ export class HttpResponseInterceptor {
     public intercept(executionContext: ExecutionContext, callHandler: CallHandler) {
         const operatorFunction = rxjs.map((value) => {
             if(value instanceof HttpBaseResponseClass) {
-                return (this.logger.log("Response:", value), value.getResponse());
+                return (this.logger.verbose("Response:", JSON.stringify(value)), value.getResponse());
             }
             else {
-                return (this.logger.log("Response:", value), value);
+                return (this.logger.verbose("Response:", JSON.stringify(value)), value);
             }
         });
 

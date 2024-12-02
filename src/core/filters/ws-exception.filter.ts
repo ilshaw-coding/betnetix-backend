@@ -13,6 +13,6 @@ export class WsExceptionFilter implements NestExceptionFilter {
 
         const client = wsArgumentsHost.getClient();
 	
-        return (this.logger.warn("Exception:", wsBaseExceptionClass), client.emit("exception", exception));
+        return (this.logger.warn("Exception:", JSON.stringify(wsBaseExceptionClass)), client.emit("exception", exception));
     }
 }
