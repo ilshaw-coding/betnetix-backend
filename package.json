@@ -1,6 +1,7 @@
 {
     "name": "backend",
     "scripts": {
+        "migrate-start:production": "prisma migrate deploy && node ./dist/main.js",
         "migrate:development": "prisma migrate dev",
         "migrate:production": "prisma migrate deploy",
         "start:development": "nest start --watch",
