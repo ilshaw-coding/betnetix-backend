@@ -28,4 +28,4 @@ COPY --from=build /app/dist /app/dist
 
 COPY --from=build /app/package.json /app/package.json
 
-CMD ["npm", "run", "start:production"]
+CMD ["npm", "run", "migrate:production", "&&", "npm", "run", "start:production"]
