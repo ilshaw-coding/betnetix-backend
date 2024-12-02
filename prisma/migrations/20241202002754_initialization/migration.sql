@@ -1,3 +1,6 @@
+-- CreateEnum
+CREATE TYPE "From" AS ENUM ('client', 'server');
+
 -- CreateTable
 CREATE TABLE "user" (
     "internal_id" TEXT NOT NULL,
@@ -29,6 +32,19 @@ CREATE TABLE "chat" (
 );
 
 -- CreateTable
+CREATE TABLE "message" (
+    "text" TEXT NOT NULL,
+    "from" "From" NOT NULL,
+    "chat_id" TEXT NOT NULL,
+    "user_id" TEXT,
+    "internal_id" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "message_pkey" PRIMARY KEY ("internal_id")
+);
+
+-- CreateTable
 CREATE TABLE "_user_to_chat" (
     "A" TEXT NOT NULL,
     "B" TEXT NOT NULL
@@ -48,6 +64,12 @@ CREATE INDEX "_user_to_chat_B_index" ON "_user_to_chat"("B");
 
 -- AddForeignKey
 ALTER TABLE "access" ADD CONSTRAINT "access_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("internal_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "message" ADD CONSTRAINT "message_chat_id_fkey" FOREIGN KEY ("chat_id") REFERENCES "chat"("internal_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "message" ADD CONSTRAINT "message_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("internal_id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_user_to_chat" ADD CONSTRAINT "_user_to_chat_A_fkey" FOREIGN KEY ("A") REFERENCES "chat"("internal_id") ON DELETE CASCADE ON UPDATE CASCADE;
